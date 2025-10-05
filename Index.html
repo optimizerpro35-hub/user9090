@@ -558,6 +558,20 @@
             }, 1000);
         }
 
+        async function injectGameMax() {
+            showToast('⚙️ Aplicando configurações...');
+            
+            const config = await applyConfig();
+            
+            setTimeout(() => {
+                showToast('✅ Configurações aplicadas! Abrindo Free Fire MAX...');
+                
+                setTimeout(() => {
+                    openGameMax();
+                }, 1500);
+            }, 1000);
+        }
+
         function openGame() {
             const link = document.createElement('a');
             link.href = 'intent://launch#Intent;scheme=freefire;package=com.dts.freefireth;end';
@@ -565,6 +579,20 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        function openGameMax() {
+            const link = document.createElement('a');
+            link.href = 'intent://com.dts.freefiremax/launch#Intent;scheme=app;package=com.dts.freefiremax;end';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Fallback para tentar abrir de outra forma
+            setTimeout(() => {
+                window.location.href = 'intent://com.dts.freefiremax#Intent;scheme=app;package=com.dts.freefiremax;end';
+            }, 1000);
         }
 
         function openManual() {
