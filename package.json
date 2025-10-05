@@ -1,0 +1,22 @@
+{
+  "name": "optimizer-vtx",
+  "version": "2.0.0",
+  "description": "Optimizer VTX - Auxílio AIM para Free Fire",
+  "main": "index.html",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'Build complete'",
+    "deploy": "netlify deploy --prod"
+  },
+  "keywords": [
+    "freefire",
+    "auxilio",
+    "aim-assist",
+    "optimizer-vtx"
+  ],
+  "author": "OptimizerVTX",
+  "license": "MIT",
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  }
+}
