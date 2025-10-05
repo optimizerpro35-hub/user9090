@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimizer VTX</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-screen {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .main-screen {
+            display: none;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #2d1b2e, #1a0f1b);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .lock-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .title {
+            color: #ec4899;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .brand {
+            color: #ec4899;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .flag {
+            font-size: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .input::placeholder {
+            color: #999;
+        }
+
+        .button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ec4899, #f472b6);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 5px 20px rgba(236, 72, 153, 0.5);
+            transition: all 0.3s;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.7);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #ec4899, #f472b6);
+            color: white;
+            box-shadow: 0 5px 15px rgba(236, 72, 153, 0.5);
+        }
+
+        .content {
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            background: transparent;
+            border: 2px solid #ec4899;
+            border-radius: 6px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .checkbox.checked {
+            background: linear-gradient(135deg, #ec4899, #f472b6);
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.6);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .option-label {
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .slider-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #ec4899, #f472b6);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.8);
+        }
+
+        .dropdown {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .radio-group {
+            margin: 15px 0;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .radio {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            border: 2px solid #ec4899;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .radio.active {
+            background: linear-gradient(135deg, #ec4899, #f472b6);
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.6);
+        }
+
+        .radio.active::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+        }
+
+        .inject-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #ec4899, #f472b6);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.5);
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .inject-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(236, 72, 153, 0.7);
+        }
+
+        .link-text {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            margin-top: 15px;
+        }
+
+        .link-text a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .info-section {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: #ec4899;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ec4899, #f472b6);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.5);
+            transition: all 0.3s;
+            z-index: 1000;
+            font-weight: bold;
+        }
+
+        .toast.show {
+            bottom: 30px;
+        }
+
+        .error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div class="login-screen" id="loginScreen">
+        <div class="card">
+            <div class="header">
+                <div class="lock-icon">🔒</div>
+                <div class="title">digite a senha</div>
+            </div>
+            <div class="input-group">
+                <input type="password" class="input" id="passwordInput" placeholder="Digite a senha">
+            </div>
+            <button class="button" onclick="login()">ENTRAR</button>
+        </div>
+    </div>
+
+    <!-- Tela Principal -->
+    <div class="main-screen" id="mainScreen">
+        <div class="card">
+            <div class="header">
+                <div class="brand">Op<span class="flag">🇧🇷</span>timizer VTX</div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('options')">OPÇÕES DO AUXÍLIO</button>
+                <button class="tab" onclick="switchTab('info')">INFO criador @Optimizer VTX</button>
+            </div>
+
+            <div id="options" class="content active">
+                <div class="option" onclick="toggleOption('noRecoil')">
+                    <div class="checkbox checked" id="check-noRecoil"></div>
+                    <div class="option-label">No recoil AIM</div>
+                </div>
+
+                <div class="option" onclick="toggleOption('headtracker')">
+                    <div class="checkbox checked" id="check-headtracker"></div>
+                    <div class="option-label">Headtracker AIM</div>
+                </div>
+
+                <div class="slider-container">
+                    <input type="range" min="0" max="100" value="100" class="slider" id="auxSlider">
+                </div>
+
+                <select class="dropdown" id="auxType">
+                    <option value="100">Auxilio 100%</option>
+                    <option value="90">Auxilio 90%</option>
+                    <option value="80">Auxilio 80%</option>
+                    <option value="70">Auxilio 70%</option>
+                </select>
+
+                <div class="section-title">Tipo de Auxilio de mira:</div>
+                <div class="radio-group">
+                    <div class="radio-option" onclick="selectAimType('atirar')">
+                        <div class="radio active" id="radio-atirar"></div>
+                        <div class="option-label">Ao Atirar</div>
+                    </div>
+                    <div class="radio-option" onclick="selectAimType('olhar')">
+                        <div class="radio" id="radio-olhar"></div>
+                        <div class="option-label">Ao Olhar boneco</div>
+                    </div>
+                </div>
+
+                <button class="inject-button" onclick="injectGame()">INJETAR AO JOGO?</button>
+
+                <div class="link-text">
+                    Se não abrir automaticamente, <a href="#" onclick="openManual()">clique aqui para abrir o Free Fire</a>.
+                </div>
+            </div>
+
+            <div id="info" class="content">
+                <div class="info-section">
+                    <div class="info-item">
+                        <span class="info-label">Criador:</span>
+                        <span class="info-value">@OptimizerVTX</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Versão:</span>
+                        <span class="info-value">2.0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Tipo:</span>
+                        <span class="info-value">AIM Assist</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Compatibilidade:</span>
+                        <span class="info-value">FF & FF MAX</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const API_BASE = '/.netlify/functions';
+        const CORRECT_PASSWORD = 'user9090';
+
+        const state = {
+            noRecoil: true,
+            headtracker: true,
+            auxValue: 100,
+            auxType: '100',
+            aimType: 'atirar'
+        };
+
+        function login() {
+            const password = document.getElementById('passwordInput').value;
+            
+            if (password === CORRECT_PASSWORD) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainScreen').style.display = 'block';
+                showToast('✅ Acesso liberado!');
+            } else {
+                showToast('❌ Senha incorreta!', true);
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        // Permitir enter para login
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('passwordInput')?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+        });
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab).classList.add('active');
+        }
+
+        function toggleOption(option) {
+            state[option] = !state[option];
+            const checkbox = document.getElementById('check-' + option);
+            
+            if (state[option]) {
+                checkbox.classList.add('checked');
+            } else {
+                checkbox.classList.remove('checked');
+            }
+        }
+
+        function selectAimType(type) {
+            state.aimType = type;
+            
+            document.querySelectorAll('.radio').forEach(r => r.classList.remove('active'));
+            document.getElementById('radio-' + type).classList.add('active');
+        }
+
+        document.getElementById('auxSlider')?.addEventListener('input', (e) => {
+            state.auxValue = e.target.value;
+        });
+
+        document.getElementById('auxType')?.addEventListener('change', (e) => {
+            state.auxType = e.target.value;
+        });
+
+        async function applyConfig() {
+            try {
+                const response = await fetch(`${API_BASE}/apply-config`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(state)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.config;
+                }
+            } catch (error) {
+                console.log('Modo offline:', error);
+            }
+            return state;
+        }
+
+        async function injectGame() {
+            showToast('⚙️ Aplicando configurações...');
+            
+            const config = await applyConfig();
+            
+            setTimeout(() => {
+                showToast('✅ Configurações aplicadas! Abrindo Free Fire...');
+                
+                setTimeout(() => {
+                    openGame();
+                }, 1500);
+            }, 1000);
+        }
+
+        function openGame() {
+            const link = document.createElement('a');
+            link.href = 'intent://launch#Intent;scheme=freefire;package=com.dts.freefireth;end';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function openManual() {
+            openGame();
+            showToast('🎮 Abrindo Free Fire...');
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            
+            if (isError) {
+                toast.classList.add('error');
+            } else {
+                toast.classList.remove('error');
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
